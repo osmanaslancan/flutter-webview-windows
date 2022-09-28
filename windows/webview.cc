@@ -607,6 +607,31 @@ void Webview::SetScrollDelta(double delta_x, double delta_y) {
   }
 }
 
+void Webview::AddBearer(const std::string& bearerToken) {
+  if (IsValid()) {
+    EventRegistrationToken token;
+    
+    webview_->AddWebResourceRequestedFilter(
+        L"*", COREWEBVIEW2_WEB_RESOURCE_CONTEXT_DOCUMENT);
+    webview_->add_WebResourceRequested(
+        Callback<ICoreWebView2WebResourceRequestedEventHandler>(
+            [this, bearerToken](
+                ICoreWebView2* sender,
+                ICoreWebView2WebResourceRequestedEventArgs* args) -> HRESULT {
+              ICoreWebView2WebResourceRequest* request;
+              ICoreWebView2HttpRequestHeaders* headers;
+              args->get_Request(&request);
+              request->get_Headers(&headers);
+              headers->SetHeader(L"Authorization",
+                  std::wstring(bearerToken.begin(), bearerToken.end())
+                      .c_str());
+              return S_OK;
+            })
+            .Get(),
+        &token);
+  }
+}
+
 void Webview::LoadUrl(const std::string& url) {
   if (IsValid()) {
     webview_->Navigate(towstring(url).c_str());

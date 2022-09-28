@@ -17,6 +17,7 @@ namespace {
 constexpr auto kErrorInvalidArgs = "invalidArguments";
 
 constexpr auto kMethodLoadUrl = "loadUrl";
+constexpr auto kMethodAddBearer = "addBearer";
 constexpr auto kMethodLoadStringContent = "loadStringContent";
 constexpr auto kMethodReload = "reload";
 constexpr auto kMethodStop = "stop";
@@ -392,6 +393,15 @@ void WebviewBridge::HandleMethodCall(
                                static_cast<size_t>(size->second));
 
       texture_bridge_->Start();
+      return result->Success();
+    }
+    return result->Error(kErrorInvalidArgs);
+  }
+
+  // addBearer: string
+  if (method_name.compare(kMethodAddBearer) == 0) {
+    if (const auto token = std::get_if<std::string>(method_call.arguments())) {
+      webview_->AddBearer(*token);
       return result->Success();
     }
     return result->Error(kErrorInvalidArgs);

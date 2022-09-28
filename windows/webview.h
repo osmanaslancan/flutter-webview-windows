@@ -130,6 +130,7 @@ class Webview {
                         double pressure);
   void SetPointerButtonState(WebviewPointerButton button, bool isDown);
   void SetScrollDelta(double delta_x, double delta_y);
+  void AddBearer(const std::string& token);
   void LoadUrl(const std::string& url);
   void LoadStringContent(const std::string& content);
   bool Stop();
