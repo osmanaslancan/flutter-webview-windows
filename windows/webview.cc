@@ -613,7 +613,8 @@ void Webview::AddBearer(const std::string& bearerToken, const std::string& filte
     
     webview_->AddWebResourceRequestedFilter(
         std::wstring(filter.begin(), filter.end()).c_str(),
-        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_FETCH);
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_ALL);
+
     webview_->add_WebResourceRequested(
         Callback<ICoreWebView2WebResourceRequestedEventHandler>(
             [this, bearerToken](
