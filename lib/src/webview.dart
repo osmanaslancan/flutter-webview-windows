@@ -264,12 +264,15 @@ class WebviewController extends ValueNotifier<WebviewValue> {
   }
 
   /// Loads the given [url].
-  Future<void> addBearer(String bearer) async {
+  Future<void> addBearer(String bearer, String filter) async {
     if (_isDisposed) {
       return;
     }
     assert(value.isInitialized);
-    return _methodChannel.invokeMethod('addBearer', bearer);
+    return _methodChannel.invokeMethod('addBearer', {
+      'token': bearer,
+      'filter': filter
+    });
   }
 
   /// Loads a document from the given string.

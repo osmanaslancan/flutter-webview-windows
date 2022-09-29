@@ -400,8 +400,16 @@ void WebviewBridge::HandleMethodCall(
 
   // addBearer: string
   if (method_name.compare(kMethodAddBearer) == 0) {
-    if (const auto token = std::get_if<std::string>(method_call.arguments())) {
-      webview_->AddBearer(*token);
+    const auto* arguments =
+        std::get_if<flutter::EncodableMap>(method_call.arguments());
+    const auto token = arguments->find(flutter::EncodableValue("token"));
+    const auto filter = arguments->find(flutter::EncodableValue("filter"));
+    
+    if (token != arguments->end() &&
+        filter != arguments->end()) {
+      const auto tokenString = std::get<std::string>(token->second);
+      const auto filterString = std::get<std::string>(filter->second);
+      webview_->AddBearer(tokenString, filterString);
       return result->Success();
     }
     return result->Error(kErrorInvalidArgs);

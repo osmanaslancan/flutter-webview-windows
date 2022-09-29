@@ -607,12 +607,13 @@ void Webview::SetScrollDelta(double delta_x, double delta_y) {
   }
 }
 
-void Webview::AddBearer(const std::string& bearerToken) {
+void Webview::AddBearer(const std::string& bearerToken, const std::string& filter) {
   if (IsValid()) {
     EventRegistrationToken token;
     
     webview_->AddWebResourceRequestedFilter(
-        L"*", COREWEBVIEW2_WEB_RESOURCE_CONTEXT_DOCUMENT);
+        std::wstring(filter.begin(), filter.end()).c_str(),
+        COREWEBVIEW2_WEB_RESOURCE_CONTEXT_DOCUMENT);
     webview_->add_WebResourceRequested(
         Callback<ICoreWebView2WebResourceRequestedEventHandler>(
             [this, bearerToken](
